@@ -1,19 +1,22 @@
 package book
 
-import "github.com/lsendoya/handleBook/model"
+import (
+	"github.com/google/uuid"
+	"github.com/lsendoya/handleBook/model"
+)
 
 type UseCase interface {
 	Add(book *model.Book) error
 	List() (model.Books, error)
-	Get(bookId string) (*model.Book, error)
-	Update(bookId string, payload interface{}) error
-	Delete(bookId string) error
+	Get(bookId uuid.UUID) (*model.Book, error)
+	Update(bookId uuid.UUID, payload interface{}) error
+	Delete(bookId uuid.UUID) error
 }
 
 type Storage interface {
 	Add(book *model.Book) error
 	List() (model.Books, error)
-	Get(bookId string) (*model.Book, error)
-	Update(bookId string, payload interface{}) error
-	Delete(bookId string) error
+	Get(bookId uuid.UUID) (*model.Book, error)
+	Update(bookId uuid.UUID, payload interface{}) error
+	Delete(bookId uuid.UUID) error
 }

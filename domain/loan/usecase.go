@@ -1,6 +1,9 @@
 package loan
 
-import "github.com/lsendoya/handleBook/model"
+import (
+	"github.com/google/uuid"
+	"github.com/lsendoya/handleBook/model"
+)
 
 type Loan struct {
 	storage Storage
@@ -10,12 +13,12 @@ func New(s Storage) Loan {
 	return Loan{s}
 }
 
-func (l *Loan) Register(loan *model.Loan) error {
-	return nil
+func (l *Loan) Register(loan interface{}) error {
+	return l.Register(loan)
 }
 func (l *Loan) List() (model.Loans, error) {
-	return nil, nil
+	return l.List()
 }
-func (l *Loan) Update(loadId string) error {
-	return nil
+func (l *Loan) Update(loadId uuid.UUID, payload *model.Loan) error {
+	return l.Update(loadId, payload)
 }

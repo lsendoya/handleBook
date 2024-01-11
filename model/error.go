@@ -26,15 +26,3 @@ func (e *Error) Error() string {
 		e.UserID,
 	)
 }
-
-func (e *Error) HasCode() bool {
-	return e.Code != ""
-}
-
-func (e *Error) HasStatusHTTP() bool {
-	return e.StatusHTTP > 0
-}
-
-func (e *Error) HasData() bool {
-	return e.Data != nil
-}

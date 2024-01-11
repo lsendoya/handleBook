@@ -1,6 +1,9 @@
 package user
 
-import "github.com/lsendoya/handleBook/model"
+import (
+	"github.com/google/uuid"
+	"github.com/lsendoya/handleBook/model"
+)
 
 type User struct {
 	storage Storage
@@ -11,17 +14,18 @@ func New(s Storage) User {
 }
 
 func (u *User) Register(user *model.User) error {
-	return nil
+	user.BeforeCreate(user)
+	return u.storage.Register(user)
 }
 func (u *User) List() (model.Users, error) {
-	return nil, nil
+	return u.storage.List()
 }
-func (u *User) Get(userId string) (*model.User, error) {
-	return &model.User{}, nil
+func (u *User) Get(userId uuid.UUID) (*model.User, error) {
+	return u.storage.Get(userId)
 }
-func (u *User) Update(userId string, payload interface{}) error {
-	return nil
+func (u *User) Update(userId uuid.UUID, payload interface{}) error {
+	return u.storage.Update(userId, payload)
 }
-func (u *User) Delete(userId string) error {
-	return nil
+func (u *User) Delete(userId uuid.UUID) error {
+	return u.storage.Delete(userId)
 }

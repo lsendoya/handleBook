@@ -25,13 +25,13 @@ func buildHandler(db *gorm.DB) handler {
 func adminRoutes(e *echo.Echo, h handler) {
 	g := e.Group("/api/v1/admin/books")
 	g.POST("", h.Add)
-	g.PUT("/:bookId", h.Update)
-	g.DELETE("/:bookId", h.Delete)
+	g.PUT("/:id", h.Update)
+	g.DELETE("/:id", h.Delete)
 
 }
 
 func publicRoutes(e *echo.Echo, h handler) {
 	g := e.Group("/api/v1/public/books")
-	g.GET("/:bookId", h.Get)
+	g.GET("/:id", h.Get)
 	g.GET("", h.List)
 }

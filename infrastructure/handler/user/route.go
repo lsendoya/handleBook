@@ -15,15 +15,15 @@ func NewRouter(e *echo.Echo, db *gorm.DB) {
 
 func buildHandler(db *gorm.DB) handler {
 	storage := userDB.New(db)
-	useCase := user.New(storage)
+	useCase := user.New(&storage)
 	return newHandler(&useCase)
 }
 
 func adminRoutes(e *echo.Echo, h handler) {
 	g := e.Group("/api/v1/admin/users")
 	g.POST("", h.Register)
-	g.PUT("/:userId", h.Update)
-	g.DELETE("/:userId", h.Delete)
-	g.GET("/:userId", h.Get)
+	g.PUT("/:id", h.Update)
+	g.DELETE("/:id", h.Delete)
+	g.GET("/:id", h.Get)
 	g.GET("", h.List)
 }
