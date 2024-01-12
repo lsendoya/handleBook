@@ -6,13 +6,23 @@ import (
 )
 
 type UseCase interface {
-	Register(loan interface{}) error
+	Register(loan model.Loan) (*model.Loan, error)
 	List() (model.Loans, error)
-	Update(loadId uuid.UUID, payload *model.Loan) error
+	UpdateStatus(loadId uuid.UUID, payload interface{}) error
+	Get(loadId uuid.UUID) (*model.Loan, error)
 }
 
 type Storage interface {
-	Register(loan interface{}) error
+	Register(loan model.Loan) (*model.Loan, error)
 	List() (model.Loans, error)
-	Update(loadId uuid.UUID, payload *model.Loan) error
+	UpdateStatus(loadId uuid.UUID, payload interface{}) error
+	Get(loadId uuid.UUID) (*model.Loan, error)
+}
+
+type UseCaseUser interface {
+	Get(userId uuid.UUID) (*model.User, error)
+}
+
+type UseCaseBook interface {
+	Get(bookId uuid.UUID) (*model.Book, error)
 }

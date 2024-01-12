@@ -4,6 +4,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/lsendoya/handleBook/infrastructure/handler/book"
 	"github.com/lsendoya/handleBook/infrastructure/handler/loan"
+	"github.com/lsendoya/handleBook/infrastructure/handler/login"
 	"github.com/lsendoya/handleBook/infrastructure/handler/user"
 	"gorm.io/gorm"
 	"net/http"
@@ -14,6 +15,7 @@ func InitRoutes(e *echo.Echo, db *gorm.DB) {
 	book.NewRouter(e, db)
 	loan.NewRouter(e, db)
 	user.NewRouter(e, db)
+	login.NewRouter(e, db)
 
 }
 

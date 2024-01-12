@@ -11,6 +11,7 @@ type UseCase interface {
 	Get(userId uuid.UUID) (*model.User, error)
 	Update(userId uuid.UUID, payload interface{}) error
 	Delete(userId uuid.UUID) error
+	GetByEmail(email string) (*model.User, error)
 }
 
 type Storage interface {
@@ -19,4 +20,5 @@ type Storage interface {
 	Get(userId uuid.UUID) (*model.User, error)
 	Update(userId uuid.UUID, payload interface{}) error
 	Delete(userId uuid.UUID) error
+	GetByEmail(email string) (*model.User, error)
 }

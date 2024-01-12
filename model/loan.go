@@ -13,8 +13,8 @@ type Loan struct {
 	Status     LoanStatus     `gorm:"type:varchar(50);null" json:"status"`
 	UserID     uuid.UUID      `gorm:"type:uuid;not null" json:"user_id"`
 	BookID     uuid.UUID      `gorm:"type:uuid;not null" json:"book_id"`
-	User       User           `gorm:"foreignKey:UserID" json:"user"`
-	Book       Book           `gorm:"foreignKey:BookID" json:"book"`
+	User       *User          `gorm:"foreignKey:UserID" json:"user"`
+	Book       *Book          `gorm:"foreignKey:BookID" json:"book"`
 	CreatedAt  time.Time      `json:"created_at"`
 	UpdatedAt  time.Time      `json:"updated_at"`
 	DeletedAt  gorm.DeletedAt `gorm:"index" json:"deleted_at,omitempty"`
@@ -23,6 +23,11 @@ type Loan struct {
 type Loans []Loan
 
 type LoanStatus string
+
+type LoanUUIDS struct {
+	UserID uuid.UUID `json:"user_id"`
+	BookID uuid.UUID `json:"book_id"`
+}
 
 const (
 	Pending   LoanStatus = "Pending"

@@ -25,7 +25,7 @@ func (u *User) Register(user *model.User) error {
 
 func (u *User) List() (model.Users, error) {
 	var users model.Users
-	if err := u.db.Find(&users).Error; err != nil {
+	if err := u.db.Omit("password").Find(&users).Error; err != nil {
 		return nil, fmt.Errorf("error retrieving users: %w", err)
 	}
 	return users, nil
@@ -67,4 +67,16 @@ func (u *User) Delete(userId uuid.UUID) error {
 		return gorm.ErrRecordNotFound
 	}
 	return nil
+}
+
+func (u *User) GetByEmail(email string) (*model.User, error) {
+	var user model.User
+	result := u.db.Where("email = ?", email).First(&user)
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return nil, result.Error
+		}
+		return nil, result.Error
+	}
+	return &user, nil
 }

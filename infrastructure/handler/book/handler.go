@@ -79,7 +79,7 @@ func (h handler) Update(c echo.Context) error {
 	}
 
 	errUpdate := h.useCase.Update(id, m)
-	if err := h.response.ValidateErr(c, "h.useCase.Update()", errUpdate); err != nil {
+	if err := h.response.ValidateErr(c, "h.useCase.UpdateStatus()", errUpdate); err != nil {
 		return err
 	}
 	return c.JSON(h.response.Updated(m))

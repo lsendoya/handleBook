@@ -28,7 +28,7 @@ func (h handler) Register(c echo.Context) error {
 		return c.JSON(h.response.BadRequest(err))
 	}
 
-	if m.Name == "" || m.Email == "" {
+	if m.Name == "" || m.Email == "" || m.Password == "" {
 		return c.JSON(h.response.BadRequest(fmt.Errorf("invalid fields of user")))
 	}
 
@@ -80,7 +80,7 @@ func (h handler) Update(c echo.Context) error {
 	m.UpdatedAt = time.Now()
 
 	errUpdate := h.useCase.Update(id, &m)
-	if err := h.response.ValidateErr(c, "h.useCase.Update()", errUpdate); err != nil {
+	if err := h.response.ValidateErr(c, "h.useCase.UpdateStatus()", errUpdate); err != nil {
 		return err
 	}
 

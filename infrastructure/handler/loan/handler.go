@@ -1,11 +1,13 @@
 package loan
 
 import (
+	"errors"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/lsendoya/handleBook/domain/loan"
 	"github.com/lsendoya/handleBook/infrastructure/handler/response"
 	"github.com/lsendoya/handleBook/model"
+	"time"
 )
 
 type handler struct {
@@ -20,19 +22,17 @@ func newHandler(uc loan.UseCase) handler {
 }
 
 func (h handler) Register(c echo.Context) error {
-	var loanData struct {
-		UserID uuid.UUID `json:"user_id"`
-		BookID uuid.UUID `json:"book_id"`
-	}
+	var loanData model.Loan
 	if err := c.Bind(&loanData); err != nil {
 		return c.JSON(h.response.BadRequest(err))
 	}
 
-	if err := h.useCase.Register(loanData); err != nil {
-		return c.JSON(h.response.InternalServerError(c, "h.useCase.Register()", err))
+	data, errRegister := h.useCase.Register(loanData)
+	if err := h.response.ValidateErr(c, "h.useCase.Register()", errRegister); err != nil {
+		return err
 	}
 
-	return c.JSON(h.response.Created(loanData))
+	return c.JSON(h.response.Created(data))
 }
 func (h handler) List(c echo.Context) error {
 	loans, err := h.useCase.List()
@@ -41,10 +41,18 @@ func (h handler) List(c echo.Context) error {
 	}
 	return c.JSON(h.response.OK(loans))
 }
-func (h handler) Update(c echo.Context) error {
-	var mdl = model.Loan{}
-	if err := c.Bind(&mdl); err != nil {
+func (h handler) UpdateStatus(c echo.Context) error {
+
+	var m struct {
+		Status    model.LoanStatus `json:"status"`
+		UpdatedAt time.Time        `json:"updated_at"`
+	}
+	if err := c.Bind(&m); err != nil {
 		return c.JSON(h.response.BadRequest(err))
+	}
+
+	if m.Status == "" {
+		return c.JSON(h.response.BadRequest(errors.New("the status is mandatory")))
 	}
 
 	id, err := uuid.Parse(c.Param("id"))
@@ -52,10 +60,26 @@ func (h handler) Update(c echo.Context) error {
 		return c.JSON(h.response.BadRequest(err))
 	}
 
-	err = h.useCase.Update(id, &mdl)
-	if err != nil {
-		return c.JSON(h.response.InternalServerError(c, "h.useCase.Update()", err))
+	m.UpdatedAt = time.Now()
+
+	errUpdate := h.useCase.UpdateStatus(id, &m)
+	if err := h.response.ValidateErr(c, "h.useCase.UpdateStatus()", errUpdate); err != nil {
+		return err
 	}
 
-	return c.JSON(h.response.Updated(mdl))
+	return c.JSON(h.response.Updated(m))
+}
+
+func (h handler) Get(c echo.Context) error {
+	id, err := uuid.Parse(c.Param("id"))
+	if err != nil {
+		return c.JSON(h.response.BadRequest(err))
+	}
+
+	mdl, errGet := h.useCase.Get(id)
+	if err := h.response.ValidateErr(c, "h.useCase.Get()", errGet); err != nil {
+		return err
+	}
+
+	return c.JSON(h.response.OK(mdl))
 }
