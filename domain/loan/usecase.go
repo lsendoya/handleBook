@@ -23,19 +23,6 @@ func (l *Loan) Register(loan model.Loan) (*model.Loan, error) {
 
 	loan.BeforeCreate(&loan)
 
-	uuidBook := loan.BookID
-	uuidUser := loan.UserID
-
-	_, errUser := l.user.Get(uuidUser)
-	if errUser != nil {
-		return nil, errUser
-	}
-
-	_, errBook := l.book.Get(uuidBook)
-	if errBook != nil {
-		return nil, errBook
-	}
-
 	loan.Status = model.Active
 
 	return l.storage.Register(loan)

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/gommon/log"
 	"github.com/lsendoya/handleBook/domain/book"
 	"github.com/lsendoya/handleBook/infrastructure/handler/response"
 	"github.com/lsendoya/handleBook/model"
@@ -20,6 +21,11 @@ func newHandler(uc book.UseCase) handler {
 }
 
 func (h handler) Add(c echo.Context) error {
+	userEmail := c.Get("email")
+	userID := c.Get("user_id")
+
+	log.Infof("email: %v, user_id: %v\n", userEmail, userID)
+
 	m := model.Book{}
 
 	if err := c.Bind(&m); err != nil {

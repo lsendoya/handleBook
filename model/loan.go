@@ -44,4 +44,5 @@ func (l Loan) BeforeCreate(loan *Loan) {
 	loan.CreatedAt = time.Now()
 	loan.UpdatedAt = time.Now()
 	loan.LoanDate = time.Now()
+	loan.ReturnDate = loan.LoanDate.Add(time.Hour * 24 * 10)
 }

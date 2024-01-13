@@ -32,7 +32,7 @@ func (h handler) Login(c echo.Context) error {
 	}
 
 	if m.Email == "" || m.Password == "" {
-		return c.JSON(h.response.BadRequest(errors.New("all fields are mandatory")))
+		return c.JSON(h.response.BadRequest(errors.New("all fields are required to log in")))
 	}
 
 	user, token, err := h.useCase.Login(m.Email, m.Password, os.Getenv("JWT_SECRET_KEY"))

@@ -52,6 +52,32 @@ func (r Response) Deleted(id uuid.UUID) (int, model.MessageResponse) {
 	}
 }
 
+func (r Response) Forbidden() (int, model.MessageResponse) {
+
+	return http.StatusForbidden, model.MessageResponse{
+		Data: nil,
+		Errors: model.Responses{
+			{
+				Code: constants.MessageForbidden, Message: "Access denied. Admin permissions required",
+			},
+		},
+		Messages: nil,
+	}
+}
+
+func (r Response) Unauthorized(err error) (int, model.MessageResponse) {
+
+	return http.StatusUnauthorized, model.MessageResponse{
+		Data: nil,
+		Errors: model.Responses{
+			{
+				Code: constants.MessageUnauthorized, Message: err.Error(),
+			},
+		},
+		Messages: nil,
+	}
+}
+
 func (r Response) BadRequest(err error) (int, model.MessageResponse) {
 
 	log.Warnf("%s", err.Error())

@@ -23,9 +23,24 @@ func newHandler(uc loan.UseCase) handler {
 
 func (h handler) Register(c echo.Context) error {
 	var loanData model.Loan
-	if err := c.Bind(&loanData); err != nil {
+
+	err := c.Bind(&loanData)
+	if err != nil {
 		return c.JSON(h.response.BadRequest(err))
 	}
+
+	if loanData.BookID == uuid.Nil {
+		return c.JSON(h.response.BadRequest(errors.New("the book_id is mandatory")))
+	}
+
+	key := c.Get("user_id")
+
+	userID, ok := key.(uuid.UUID)
+	if !ok {
+		return c.JSON(h.response.BadRequest(errors.New("invalid user_id format or not provided")))
+	}
+
+	loanData.UserID = userID
 
 	data, errRegister := h.useCase.Register(loanData)
 	if err := h.response.ValidateErr(c, "h.useCase.Register()", errRegister); err != nil {
