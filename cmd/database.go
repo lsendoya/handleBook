@@ -31,8 +31,17 @@ func makeDSN() (string, error) {
 		return "", fmt.Errorf("strconv.ParseUint(), error converting DB_PORT to uint, %w", err)
 	}
 
+	sslMode := Config("DB_SSL_MODE")
+
 	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
-		Config("DB_HOST"), port, Config("DB_USER"), Config("DB_PASSWORD"), Config("DB_NAME"), Config("DB_SSL_MODE"))
+		Config("DB_HOST"), port, Config("DB_USER"), Config("DB_PASSWORD"), Config("DB_NAME"), sslMode)
+
+	if sslMode == "require" {
+
+		sslRootCert := Config("DB_SSL_ROOT_CERT")
+
+		dsn += fmt.Sprintf(" sslrootcert=%s", sslRootCert)
+	}
 
 	return dsn, nil
 }

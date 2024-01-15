@@ -25,6 +25,15 @@ func main() {
 
 	handler.InitRoutes(e, db)
 
-	err = e.Start(":" + Config("SERVER_PORT"))
+	port := Config("SERVER_PORT")
+
+	if Config("IS_HTTPS") == "true" {
+		err = e.StartTLS(port, Config("CERT_PEM_FILE"), Config("KEY_PEM"))
+	} else {
+		err = e.Start(":" + port)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 
 }
