@@ -28,7 +28,7 @@ func main() {
 	port := Config("SERVER_PORT")
 
 	if Config("IS_HTTPS") == "true" {
-		err = e.StartTLS(port, Config("CERT_PEM_FILE"), Config("KEY_PEM"))
+		err = e.StartTLS(":"+port, Config("CERT_PEM_FILE"), Config("KEY_PEM"))
 		log.Fatal(err)
 	} else {
 		err = e.Start(":" + port)
